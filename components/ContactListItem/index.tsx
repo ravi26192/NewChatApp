@@ -5,6 +5,9 @@ import { User } from '../../types';
 import styles from './styles';
 import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import { createChatRoom, createChatRoomUser } from '../../src/graphql/mutations';
+import Auth from '@aws-amplify/auth';
 
 export type ContactListItemProps = {
     user: User;
@@ -15,8 +18,56 @@ const ContactListItem = (props: ContactListItemProps) => {
 
     const navigation = useNavigation();
 
-    const onClick = () => {
-        // navigate to chat room with the contact selected
+    const onClick = async () => {
+        //console.warn("Hello");
+        try{
+            const newChatRoomData = await API.graphql(
+                graphqlOperation(
+                    createChatRoom, {
+                        input: { }
+                    }
+                )
+            )
+            
+            if (!newChatRoomData.data){
+                console.log("Failed creating chat room");
+                return;
+            }
+
+            const newChatRoom = newChatRoomData.data.createChatRoom;
+            //console.log(newChatRoom);
+
+            await API.graphql(
+                graphqlOperation(
+                    createChatRoomUser, {
+                        input: {
+                            userID: user.id,
+                            chatRoomID: newChatRoom.id
+                        }                        
+                    }
+                )
+            )
+
+            const userInfo = await Auth.currentAuthenticatedUser();
+            await API.graphql(
+                graphqlOperation(
+                    createChatRoomUser, {
+                        input: {
+                            userID: userInfo.attributes.sub,
+                            chatRoomID: newChatRoom.id
+                        }
+                    }
+                )
+            )
+
+            navigation.navigate('ChatRoom', {
+                id: newChatRoom.id,
+                name: "Chat Room 1",
+            })
+
+        } catch(e){
+            console.log(e);
+        }
     } 
 
     return (
