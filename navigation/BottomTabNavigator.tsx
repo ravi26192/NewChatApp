@@ -18,6 +18,7 @@ export default function BottomTabNavigator() {
 
   return (
     <Tab.Navigator
+      style={{backgroundColor:'white'}}
       initialRouteName="Chats"
       tabBarOptions={{ 
           activeTintColor: Colors[colorScheme].background,
@@ -33,26 +34,11 @@ export default function BottomTabNavigator() {
             },
             showIcon: true,
           }}>
-      <Tab.Screen
-        name="Camera"
-        component={TabOneNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <Fontisto name="camera" color={color} />,
-          tabBarLabel: () => null,
-        }}
-      />
+      
       <Tab.Screen
         name="Chats"
         component={ChatsScreen}        
-      />
-      <Tab.Screen
-        name="Status"
-        component={TabOneNavigator}        
-      />
-      <Tab.Screen
-        name="Calls"
-        component={TabTwoNavigator}       
-      />
+      />      
     </Tab.Navigator>
   );
 }

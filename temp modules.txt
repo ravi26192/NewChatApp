@@ -1,0 +1,18 @@
+<Tab.Screen
+        name="Camera"
+        component={TabOneNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <Fontisto name="camera" color={color} />,
+          tabBarLabel: () => null,
+        }}
+/>
+
+<Tab.Screen
+        name="Status"
+        component={TabOneNavigator}        
+/>
+
+<Tab.Screen
+        name="Calls"
+        component={TabTwoNavigator}       
+/>
